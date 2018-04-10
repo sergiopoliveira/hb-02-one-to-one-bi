@@ -1,24 +1,22 @@
 package com.sergio.hibernate.demo.entity;
 
-
-
-//from JPA, a standard API that Hibernate implements
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 @Entity
-@Table(name="student")
-public class Student {
+@Table(name="instructor")
+public class Instructor {
 
 	@Id
-	@Column(name="id")
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="id")
 	private int id;
 	
 	@Column(name="first_name")
@@ -30,12 +28,18 @@ public class Student {
 	@Column(name="email")
 	private String email;
 	
-
-	public Student() {
+	//setup the mapping to InstructorDetail
+	
+	@OneToOne(cascade=CascadeType.ALL)
+	@JoinColumn(name="instructor_detail_id")
+	private InstructorDetail instructorDetail;
+	
+	public Instructor() {
 		
 	}
 
-	public Student(String firstName, String lastName, String email) {
+	public Instructor(String firstName, String lastName, String email) {
+		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
@@ -73,10 +77,18 @@ public class Student {
 		this.email = email;
 	}
 
+	public InstructorDetail getInstructorDetail() {
+		return instructorDetail;
+	}
+
+	public void setInstructorDetail(InstructorDetail instructorDetail) {
+		this.instructorDetail = instructorDetail;
+	}
+
 	@Override
 	public String toString() {
-		 return "Student [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email ;
-	            
+		return "Instructor [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
+				+ ", instructorDetail=" + instructorDetail + "]";
 	}
 	
 	

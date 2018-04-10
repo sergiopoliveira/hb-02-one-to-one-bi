@@ -1,28 +1,26 @@
 package com.sergio.hibernate.demo;
 
-import java.text.ParseException;
-import java.util.Date;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+import com.sergio.hibernate.demo.entity.Instructor;
+import com.sergio.hibernate.demo.entity.InstructorDetail;
 import com.sergio.hibernate.demo.entity.Student;
 
-public class CreateStudentDemo {
+public class CreateDemo {
 
 	public static void main(String[] args) {
 		
 		// create session factory
 		SessionFactory factory = new Configuration()
 								 .configure("hibernate.cfg.xml")
-								 .addAnnotatedClass(Student.class)
+								 .addAnnotatedClass(Instructor.class)
+								 .addAnnotatedClass(InstructorDetail.class)
 								 .buildSessionFactory();
 		
 		// create session
 		Session session = factory.getCurrentSession();
-
-		
 		
 		// use the session object to save Java object
 		try {
@@ -30,26 +28,37 @@ public class CreateStudentDemo {
 			// create a student object
 			System.out.println("Creating a new student object...");
 			
-            String theDateOfBirthStr = "31/12/1998";
-            Date theDateOfBirth = DateUtils.parseDate(theDateOfBirthStr);
-            
-			Student tempStudent = new Student("Sergio", "Oliveira", "sergio@sergio.com", theDateOfBirth);
+//			//associate the objects
+//			Instructor tempInstructor = 
+//					new Instructor("Sergio", "Oliveira", "sergio@sergio.com");
+//			
+//			InstructorDetail tempInstructorDetail = 
+//					new InstructorDetail("http://youtube.com/sergio", "Code");
+			
+			Instructor tempInstructor = 
+					new Instructor("Alberto", "Peneda", "alberto@peneda.com");
+			
+			InstructorDetail tempInstructorDetail = 
+					new InstructorDetail("http://youtube.com/alberto", "Study");
+  	
+			//associate the objects
+			tempInstructor.setInstructorDetail(tempInstructorDetail);
 			
 			// start a transaction
 			session.beginTransaction();
 			
-			// save the student object
-			System.out.println("Saving the student...");
-			session.save(tempStudent);
+			// save the object
+			System.out.println("Saving the object(s)...");
+			System.out.println(tempInstructor);
+			//NOTE: this will also save the deatails object
+			//because of CascadeType.ALL
+			session.save(tempInstructor);
 			
 			// commit transaction
 			session.getTransaction().commit();
 			
 			System.out.println("Done!");
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} 
 		finally {
 			factory.close();
 		}
